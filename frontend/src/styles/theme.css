@@ -1,0 +1,72 @@
+:root {
+  /* === HEADERS HEIGHT === */
+  --mobile-header-height: 73px;
+  --desktop-header-height: 73px;
+
+  /* === FONT FAMILY === */
+  --font-nunito: 'Nunito', sans-serif;
+  --font-sans: var(--font-nunito);
+
+  /* === FONT SIZES === */
+  --font-xs: 0.625rem;
+  --font-sm: 0.75rem;
+  --font-md: 0.875rem;
+  --font-mdm: 0.925rem;
+  --font-ldm: 0.950rem;
+  --font-lg: 1rem;
+  --font-lgl: 1.05rem;
+  --font-xl: 1.125rem;
+  --font-lxl: 1.25rem;
+  --font-llxl: 1.35rem;
+  --font-lllxl: 1.45rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 1.875rem;
+
+  /* === FONT WEIGHTS === */
+  --font-weight-medium: 500;
+  --font-weight-semi: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* === COLORS === */
+
+  /* Highlight */
+  --color-highlight-1: #C432F8;
+  --color-highlight-2: #FF8555;
+  --color-highlight-3: #FFA24D;
+  --color-highlight-4: #FFBC5D;
+  --color-highlight-5: #FFE2A5;
+  --color-highlight-6: #FFEAE7;
+  --color-highlight-7: #FFBFA5;
+
+  /* Neutral - Light */
+  --color-neutral-100: #C5C8CC;
+  --color-neutral-200: #D4D5DD;
+  --color-neutral-300: #E8E6F1;
+  --color-neutral-350: #F6F6FB;
+  --color-neutral-400: #F8F9FE;
+  --color-neutral-500: #FFFFFF;
+
+  /* Neutral - Dark */
+  --color-dark-100: #1F2024;
+  --color-dark-200: #2F3038;
+  --color-dark-300: #494A50;
+  --color-dark-400: #71727A;
+  --color-dark-500: #8F9098;
+
+  /* Support - Success */
+  --color-success-1: #298267;
+  --color-success-2: #3ACA9A;
+  --color-success-3: #E7F4EB;
+  --color-success-4: #2FA86B;
+
+  /* Support - Warning */
+  --color-warning-1: #E85339;
+  --color-warning-2: #FF837C;
+  --color-warning-3: #FFF4E4;
+
+  /* Support - Error */
+  --color-error-1: #ED3241;
+  --color-error-2: #FF616D;
+  --color-error-3: #FFE2E5;
+}

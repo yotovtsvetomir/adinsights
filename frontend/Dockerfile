@@ -1,6 +1,6 @@
 # frontend/Dockerfile
 
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -12,6 +12,6 @@ RUN npm install
 # Copy the rest of the files
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3000 6006
 
 CMD ["npm", "run", "dev"]

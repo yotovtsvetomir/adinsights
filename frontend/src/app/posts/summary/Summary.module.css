@@ -1,0 +1,136 @@
+.summarySection {
+  min-height: calc(100dvh - var(--desktop-header-height) - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.summarySection h2 {
+  font-size: var(--font-3xl);
+  color: var(--color-dark-200);
+  text-align: center;
+}
+
+.topThreeList {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  list-style: none;
+  padding: 0;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.userItem {
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.userItem p {
+  font-weight: 600;
+  font-size: var(--font-lg);
+}
+
+.profileImage {
+  border-radius: 50%;
+  border: 2px solid var(--color-highlight-1);
+}
+
+.firstPlace {
+  transform: translateY(-10px);
+  z-index: 2;
+  order: 2;
+}
+
+.secondPlace {
+  transform: translateY(10px);
+  order: 1;
+}
+
+.thirdPlace {
+  transform: translateY(20px);
+  order: 3;
+}
+
+.wordCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+  justify-content: center;
+}
+
+.wordBlob {
+  padding: 0.7rem 1.4rem;
+  background-color: #e0e0e0;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  line-height: 1;
+}
+
+.wordBlob span:first-of-type {
+  font-size: var(--font-lg);
+}
+
+.wordBlob span:last-of-type {
+  font-size: var(--font-sm);
+  color: var(--color-dark-300);
+}
+
+.flag_counts ul {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border-radius: 8px;
+  list-style: none;
+  margin: 0;
+  line-height: 1;
+  font-size: var(--font-lgl);
+}
+
+.flag_counts li {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--color-neutral-300);
+}
+
+.flag_counts span + span {
+  margin-left: 1rem;
+}
+
+.flag_counts span:nth-child(2) {
+  margin-right: auto;
+}
+
+.flag_counts ul li:first-of-type {
+  border-bottom: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.flag_counts ul li:last-of-type {
+  border-top: 0;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.flag_counts span:first-of-type {
+  font-size: 1.5rem;
+  color: var(--color-highlight-1);
+}
+
+.flag_counts span {
+  color: var(--color-dark-200);
+}
+
+.flag_counts li > span:last-of-type {
+  font-weight: 700;
+}

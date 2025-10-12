@@ -1,0 +1,20 @@
+.footer {
+  background-color: var(--color-neutral-500);
+  padding: 1.6rem 0;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+  font-family: var(--font-sans);
+  font-size: var(--font-sm);
+  position: relative;
+  z-index: 10;
+}
+
+.footer_inner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.footer_inner p {
+	font-size: var(--font-lg);
+	color: var(--color-dark-300);
+}
