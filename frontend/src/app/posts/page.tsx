@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Spinner } from '@/ui-components/Spinner/Spinner';
@@ -69,12 +69,28 @@ export default function PostsPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const debouncedSearchQuery = useDebounce(searchQuery, 700);
 
+  const hasFetchedOnce = useRef(false);
+  const initialContextPage = useRef(contextData.posts.current_page);
+
   // Reset page to 1 when filters or search changes (debounced)
   useEffect(() => {
     setCurrentPage(1);
   }, [reasonFilter, userFilter, orderBy, debouncedSearchQuery]);
 
   useEffect(() => {
+    if (!hasFetchedOnce.current) {
+      hasFetchedOnce.current = true;
+
+      const isInitialState =
+        currentPage === initialContextPage.current &&
+        !reasonFilter &&
+        !userFilter &&
+        !orderBy &&
+        !debouncedSearchQuery;
+
+      if (isInitialState) return;
+    }
+
     async function fetchData() {
       setLoading(true);
       try {
