@@ -1,17 +1,17 @@
 import { notFound } from 'next/navigation';
-import { Post } from '@/types/models';
+import { PostBase } from '@/types/models';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Post.module.css';
 import { Button } from '@/ui-components/Button/Button';
 
 interface PostPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-async function fetchPostById(id: string): Promise<Post | null> {
+async function fetchPostById(id: string): Promise<PostBase | null> {
   const res = await fetch(`${process.env.NEXT_BACKEND_API_URL}/posts/single/${id}`, {
     cache: 'no-store',
   });

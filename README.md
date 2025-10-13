@@ -92,7 +92,7 @@ source venv/bin/activate
 
 - To generate the actual types
 ```bash
-PYTHONPATH=$(pwd) pydantic2ts --module app.schemas.post --output ../frontend/types/models.ts
+PYTHONPATH=$(pwd) pydantic2ts --module app.schemas.post --output ../frontend/src/types/models.ts
 ```
 
 # Run backend tests

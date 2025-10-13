@@ -12,7 +12,7 @@ import Pagination from '@/ui-components/Pagination/Pagination';
 import dynamic from 'next/dynamic';
 import styles from './Posts.module.css';
 
-import { AnalyzePostsResponse, PostBase } from '@types/models';
+import { AnalyzePostsResponse, PostBase } from '@/types/models';
 import { usePostsData } from '@/context/PostsContext';
 
 const ReactSelect = dynamic(() => import('@/ui-components/Select/ReactSelect'), {
@@ -136,10 +136,10 @@ export default function PostsPage() {
 
       <div className={styles.filters}>
         <div>
-          <ReactSelect<Option>
+          <ReactSelect
             options={reasonOptions}
             value={reasonFilter}
-            onChange={setReasonFilter}
+            onChange={(option) => setReasonFilter(option ?? null)}
             placeholder="Filter by Reason"
             isClearable
             isSearchable={true}
@@ -147,10 +147,10 @@ export default function PostsPage() {
         </div>
 
         <div>
-          <ReactSelect<Option>
+          <ReactSelect
             options={userOptions}
             value={userFilter}
-            onChange={setUserFilter}
+            onChange={(option) => setUserFilter(option ?? null)}
             placeholder="Filter by User"
             isClearable
             isSearchable={true}
@@ -158,19 +158,20 @@ export default function PostsPage() {
         </div>
 
         <div>
-          <ReactSelect<Option>
+          <ReactSelect
             options={orderByOptions}
             value={orderBy}
-            onChange={setOrderBy}
+            onChange={(option) => setOrderBy(option ?? null)}
             placeholder="Order by"
             isClearable
           />
         </div>
 
         <Input
+          id="search"
+          name="search"
           type="text"
           placeholder="Search by title..."
-          className={styles.searchInput}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           aria-label="Search by title"
