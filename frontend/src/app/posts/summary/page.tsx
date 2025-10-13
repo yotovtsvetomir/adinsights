@@ -49,8 +49,10 @@ export default function SummaryClient() {
           </ul>
         </div>
 
+        <div className={styles.divider}></div>
+
         <div className={styles.common_words}>
-          <h2>Most frequently used words</h2>
+          <h2>Most frequently used words in titles</h2>
           <div className={styles.wordCloud}>
             {data.summary.common_words.map(({ word, count }, index) => (
               <div
@@ -66,6 +68,8 @@ export default function SummaryClient() {
             ))}
           </div>
         </div>
+
+        <div className={styles.divider}></div>
 
         <div className={styles.flag_counts}>
           <h2>Post Flag Counts</h2>

@@ -1,4 +1,4 @@
-from sqlalchemy import or_, and_, text, desc, asc, select, bindparam
+from sqlalchemy import or_, and_, text, desc, asc, bindparam
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -8,12 +8,13 @@ async def apply_filters_search_ordering(
     search: str | None = None,
     search_columns: list = None,
     filters: list | None = None,
-    ordering: str = "-created_at",
+    ordering: str = "-id",
     trigram_threshold: float = 0.7,
 ):
     filters = filters or []
     search_columns = search_columns or []
 
+    # Set trigram threshold for fuzzy search
     await db.execute(text(f"SET pg_trgm.similarity_threshold = {trigram_threshold}"))
 
     async def build_filters(query: str):
@@ -22,6 +23,7 @@ async def apply_filters_search_ordering(
         words = query.strip().split()
         if not words:
             return None
+
         search_filters = []
 
         for idx, word in enumerate(words):
@@ -37,28 +39,34 @@ async def apply_filters_search_ordering(
                     )
                     word_column_filters.append(col.ilike(f"%{word}%"))
             search_filters.append(or_(*word_column_filters))
+
         return and_(*search_filters)
 
-    # Build and apply search filter
+    # Build search filter if search query is provided
     filt = await build_filters(search)
-    temp_filters = filters.copy()
-
     if filt is not None:
-        temp_filters.append(filt)
-
-        # Check if any rows match, then apply
-        stmt = select(model).where(*temp_filters).limit(1)
-        result = await db.execute(stmt)
-
-        if result.scalars().first():
-            filters.append(filt)
+        filters.append(filt)  # Always apply the filter, even if it matches 0 results
 
     # Apply ordering
-    if ordering.startswith("-"):
-        order_column = getattr(model, ordering[1:], getattr(model, "created_at"))
-        order_by = [desc(order_column)]
-    else:
-        order_column = getattr(model, ordering, getattr(model, "created_at"))
-        order_by = [asc(order_column)]
+    try:
+        if ":" in ordering:
+            column_name, direction = ordering.split(":")
+            order_column = getattr(model, column_name)
+            if direction.lower() == "desc":
+                order_by = [desc(order_column)]
+            else:
+                order_by = [asc(order_column)]
+        else:
+            # fallback: if ordering is like "-id" or "id"
+            if ordering.startswith("-"):
+                order_column = getattr(model, ordering[1:])
+                order_by = [desc(order_column)]
+            else:
+                order_column = getattr(model, ordering)
+                order_by = [asc(order_column)]
+    except AttributeError:
+        raise ValueError(
+            f"Ordering column '{ordering}' not found on model {model.__name__}"
+        )
 
     return filters, order_by

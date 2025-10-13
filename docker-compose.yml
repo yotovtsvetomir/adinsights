@@ -19,11 +19,29 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        INSTALL_PLAYWRIGHT: "false"
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
     command: npm run dev
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+
+  storybook:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        INSTALL_PLAYWRIGHT: "true"
+    ports:
+      - "6006:6006"
+    volumes:
+      - ./frontend:/app
+    command: npm run storybook
     environment:
       - NODE_ENV=development
     depends_on:

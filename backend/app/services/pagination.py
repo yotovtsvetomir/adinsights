@@ -15,8 +15,8 @@ async def paginate(
     anon_session_id: str | None = None,
     options: list = None,
     schema: Type[BaseModel] | None = None,
-    extra_filters: list = None,  # optional
-    ordering: list = None,  # optional
+    extra_filters: list = None,
+    ordering: list = None,
 ):
     offset = (page - 1) * page_size
     query = select(model)

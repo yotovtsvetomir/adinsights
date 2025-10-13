@@ -8,6 +8,7 @@
 export interface AnalyzePostsResponse {
   posts: PaginatedPosts;
   summary: SummaryPanel;
+  filters: FiltersPanel;
   duration?: number | null;
 }
 export interface PaginatedPosts {
@@ -34,6 +35,10 @@ export interface SummaryPanel {
 export interface WordCount {
   word: string;
   count: number;
+}
+export interface FiltersPanel {
+  all_users: number[];
+  all_flag_reasons: string[];
 }
 export interface PostCreate {
   id: number;

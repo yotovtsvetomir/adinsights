@@ -11,12 +11,14 @@ interface PaginationProps {
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   if (totalPages <= 1) return null;
 
-  const handlePageClick = (page: number) => {
+  const handlePageClick = (page: number, shouldScroll: boolean = true) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 0);
+      if (shouldScroll) {
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 0);
+      }
     }
   };
 
@@ -58,7 +60,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         <button
           key={`prev-ellipsis-${index}`}
           className={styles.pageButton}
-          onClick={() => handlePageClick(Math.max(currentPage - 3, 1))}
+          onClick={() => handlePageClick(Math.max(currentPage - 3, 1), false)} // no scroll on ellipsis
         >
           ...
         </button>
@@ -70,7 +72,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         <button
           key={`next-ellipsis-${index}`}
           className={styles.pageButton}
-          onClick={() => handlePageClick(Math.min(currentPage + 3, totalPages))}
+          onClick={() => handlePageClick(Math.min(currentPage + 3, totalPages), false)} // no scroll on ellipsis
         >
           ...
         </button>
@@ -81,7 +83,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         key={page}
         className={`${styles.pageButton} ${page === currentPage ? styles.active : ''}`}
-        onClick={() => handlePageClick(Number(page))}
+        onClick={() => handlePageClick(Number(page))} // scroll by default
       >
         {page}
       </button>
@@ -93,9 +95,9 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         onClick={() => handlePageClick(currentPage - 1)}
         disabled={currentPage === 1}
-        className={styles.navButton}
+        className={`${styles.left} ${styles.navButton}`}
       >
-        <span className="material-symbols-outlined">chevron_left</span>
+        <span className="material-symbols-outlined">keyboard_arrow_left</span>
       </button>
 
       {pageItems}
@@ -105,7 +107,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         disabled={currentPage === totalPages}
         className={styles.navButton}
       >
-        <span className="material-symbols-outlined">chevron_right</span>
+        <span className="material-symbols-outlined">keyboard_arrow_right</span>
       </button>
     </div>
   );

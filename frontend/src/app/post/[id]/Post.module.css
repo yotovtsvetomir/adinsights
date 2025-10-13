@@ -1,0 +1,38 @@
+.actions {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.alignment {
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--color-dark-200);
+}
+
+.meta {
+  font-size: 0.875rem;
+  color: var(--color-dark-400);
+  margin-bottom: 20px;
+}
+
+.imageWrapper {
+  position: relative;
+  height: 450px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.content p {
+  font-size: 1rem;
+  color: var(--color-dark-300);
+  line-height: 1.7;
+  margin-bottom: 15px;
+}

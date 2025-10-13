@@ -11,6 +11,11 @@
   text-align: center;
 }
 
+.divider {
+  background: var(--color-highlight-3);
+  height: 1px;
+}
+
 .topThreeList {
   display: flex;
   justify-content: center;

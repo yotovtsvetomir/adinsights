@@ -23,12 +23,14 @@
 }
 
 .navButton {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
 
   cursor: pointer;
-  padding: 0.5rem;
+  width: 45px;
+  height: 45px;
 
   border-radius: 50%;
   background: white;
@@ -37,8 +39,16 @@
 }
 
 .navButton span {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 1px);
+  transform: translate(-50%, -50%);
   font-size: 1.7rem;
   color: var(--color-highlight-1);
+}
+
+.left span {
+  left: calc(50% - 1px) !important;
 }
 
 .navButton:hover {

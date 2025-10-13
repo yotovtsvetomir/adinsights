@@ -1,16 +1,18 @@
 # frontend/Dockerfile
 
-FROM node:20-alpine
+FROM node:20
 
 WORKDIR /app
 
-# Install dependencies first (package.json, package-lock.json)
 COPY package*.json ./
-
 RUN npm install
 
-# Copy the rest of the files
 COPY . .
+
+ARG INSTALL_PLAYWRIGHT=false
+RUN if [ "$INSTALL_PLAYWRIGHT" = "true" ]; then \
+      npx playwright install --with-deps; \
+    fi
 
 EXPOSE 3000 6006
 

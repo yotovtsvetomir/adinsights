@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Spinner } from '@/ui-components/Spinner/Spinner';
 import { Button } from '@/ui-components/Button/Button';
 import { Input } from '@/ui-components/Input/Input';
@@ -11,7 +12,7 @@ import Pagination from '@/ui-components/Pagination/Pagination';
 import dynamic from 'next/dynamic';
 import styles from './Posts.module.css';
 
-import { AnalyzePostsResponse, PostBase, SummaryPanel } from '@types/models';
+import { AnalyzePostsResponse, PostBase } from '@types/models';
 import { usePostsData } from '@/context/PostsContext';
 
 const ReactSelect = dynamic(() => import('@/ui-components/Select/ReactSelect'), {
@@ -48,30 +49,30 @@ export default function PostsPage() {
   const contextData = usePostsData();
   const [posts, setPosts] = useState<PostBase[]>(contextData.posts.items);
   const [duration, setDuration] = useState<number>(contextData.duration ?? 0);
-  const [summary, setSummary] = useState<SummaryPanel>(contextData.summary);
+  const [filters, setFilters] = useState<{ all_users: number[]; all_flag_reasons: string[] }>({
+    all_users: [],
+    all_flag_reasons: [],
+  });
   const [currentPage, setCurrentPage] = useState<number>(
     contextData.posts.current_page
   );
   const [totalPages, setTotalPages] = useState<number>(
     contextData.posts.total_pages
   );
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  
   const [reasonFilter, setReasonFilter] = useState<Option | null>(null);
   const [userFilter, setUserFilter] = useState<Option | null>(null);
+  const [orderBy, setOrderBy] = useState<Option | null>(null);
+
   const [loading, setLoading] = useState<boolean>(false);
 
-  const reasonOptions: Option[] = [
-    { value: 'bot', label: 'Bot' },
-    { value: 'short_title', label: 'Short Title' },
-    { value: 'duplicate', label: 'Duplicate' },
-  ];
-
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const debouncedSearchQuery = useDebounce(searchQuery, 700);
 
   // Reset page to 1 when filters or search changes (debounced)
   useEffect(() => {
     setCurrentPage(1);
-  }, [reasonFilter, userFilter, debouncedSearchQuery]);
+  }, [reasonFilter, userFilter, orderBy, debouncedSearchQuery]);
 
   useEffect(() => {
     async function fetchData() {
@@ -85,6 +86,7 @@ export default function PostsPage() {
         if (debouncedSearchQuery) params.append('search', debouncedSearchQuery);
         if (reasonFilter) params.append('reason', reasonFilter.value);
         if (userFilter) params.append('user_id', userFilter.value);
+        if (orderBy) params.append('order_by', orderBy.value);
 
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/posts/analyze-posts?${params.toString()}`
@@ -94,7 +96,7 @@ export default function PostsPage() {
         setPosts(data.posts.items);
         setTotalPages(data.posts.total_pages);
         setDuration(data.duration || 0);
-        setSummary(data.summary);
+        setFilters(data.filters);
       } catch (err) {
         console.error('Failed to fetch posts:', err);
       } finally {
@@ -103,19 +105,33 @@ export default function PostsPage() {
     }
 
     fetchData();
-  }, [currentPage, reasonFilter, userFilter, debouncedSearchQuery]);
+  }, [currentPage, reasonFilter, userFilter, orderBy, debouncedSearchQuery]);
 
   const userOptions: Option[] =
-    summary?.top_three_users.map((uid) => ({
+    filters.all_users.map((uid) => ({
       value: uid.toString(),
       label: `User ${uid}`,
     })) || [];
+
+  const reasonOptions: Option[] =
+    filters.all_flag_reasons.map((reason) => ({
+      value: reason,
+      label: reason.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+    })) || [];
+
+  const orderByOptions: Option[] = [
+    { value: 'title:asc', label: 'Title ↑' },
+    { value: 'title:desc', label: 'Title ↓' },
+    { value: 'id:asc', label: 'ID ↑' },
+    { value: 'id:desc', label: 'ID ↓' },
+  ];
 
   return (
     <div className="container fullHeight centerWrapper">
       <div className={styles.duration}>
         <h3>The request to the API took {formatDuration(duration)}</h3>
-        <p>Keep in mind the app is deployed on a very small node</p>
+        <p>Since the app is for showcase it is deployed on a very small node and on docker compose</p>
+        <p>It can be a lot faster on proper cloud with kube or larger node running natively</p>
       </div>
 
       <div className={styles.filters}>
@@ -126,6 +142,7 @@ export default function PostsPage() {
             onChange={setReasonFilter}
             placeholder="Filter by Reason"
             isClearable
+            isSearchable={true}
           />
         </div>
 
@@ -135,6 +152,17 @@ export default function PostsPage() {
             value={userFilter}
             onChange={setUserFilter}
             placeholder="Filter by User"
+            isClearable
+            isSearchable={true}
+          />
+        </div>
+
+        <div>
+          <ReactSelect<Option>
+            options={orderByOptions}
+            value={orderBy}
+            onChange={setOrderBy}
+            placeholder="Order by"
             isClearable
           />
         </div>
@@ -149,7 +177,7 @@ export default function PostsPage() {
         />
       </div>
 
-      <h2 className={styles.heading}>All Posts</h2>
+      <h2 className={styles.heading}>Posts</h2>
 
       {loading ? (
         <Spinner size={50} color="var(--color-highlight-1)" />
@@ -169,22 +197,24 @@ export default function PostsPage() {
                   />
                 </div>
                 <h2 className={styles.title}>{post.title}</h2>
-                <p className={styles.author}>User ID: {post.user_id}</p>
+                <p className={styles.author}>Post ID: {post.id}, User ID: {post.user_id}</p>
                 <p className={styles.excerpt}>{post.body.slice(0, 120)}...</p>
                 {post.flag_reason && (
                   <p className={styles.flag}>
-                    Reason: <strong>{post.flag_reason}</strong>
+                    {post.flag_reason}
                   </p>
                 )}
                 <div className={styles.cardActions}>
-                  <Button
-                    variant="primary"
-                    width="100%"
-                    icon="article"
-                    iconPosition="left"
-                  >
-                    Read more
-                  </Button>
+                  <Link href={`/post/${post.id}`}>
+                    <Button
+                      variant="primary"
+                      width="100%"
+                      icon="article"
+                      iconPosition="left"
+                    >
+                      Read more
+                    </Button>
+                  </Link>
                 </div>
               </div>
             ))}
