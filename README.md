@@ -11,7 +11,7 @@ Check out the live website here: [https://teamyotov.com](https://teamyotov.com)
 The frontend leverages Server-Side Rendering (SSR) to deliver initial data quickly and SEO-friendly. To optimize performance and simplify state management, filtering, sorting, searching, and pagination are all handled via a **single API request** that dynamically updates based on user interactions. This design reduces unnecessary calls, ensures consistent data, and keeps the UI highly responsive.
 
 ## Performance & Tech Insights
-This project demonstrates efficient handling of complex filters, sorting, search, and pagination within a single optimized API request. Running on a minimal server setup (1 CPU, 1GB RAM), it achieves impressively low load times (~0.06 seconds) for data fetching and rendering.
+This project demonstrates efficient handling of complex filters, sorting, search, and pagination within a single optimized API request. Running on a minimal server setup (1 CPU, 1GB RAM), it achieves impressively low load times (~0.0* seconds) for data fetching and rendering.
 
 Key optimizations include:
 
