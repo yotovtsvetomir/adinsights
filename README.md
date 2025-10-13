@@ -7,20 +7,10 @@ This project fetches posts data from third-party stores into the database and pr
 ## Live Demo
 Check out the live website here: [https://teamyotov.com](https://teamyotov.com)
 
-## Features
-
-- Fetches posts from external API and stores in DB without duplicates
-- Flags posts with reasons like "Bot", "Duplicate", "Short title"
-- Complex pagination, search, filters, and sorting working together
-- Analysis including bot user detection and word frequency counts
-- Summary panel showing top users, common words, and flagged post counts
-
 ## SSR & Single Request Design
-
 The frontend leverages Server-Side Rendering (SSR) to deliver initial data quickly and SEO-friendly. To optimize performance and simplify state management, filtering, sorting, searching, and pagination are all handled via a **single API request** that dynamically updates based on user interactions. This design reduces unnecessary calls, ensures consistent data, and keeps the UI highly responsive.
 
 ## Performance & Tech Insights
-
 This project demonstrates efficient handling of complex filters, sorting, search, and pagination within a single optimized API request. Running on a minimal server setup (1 CPU, 1GB RAM), it achieves impressively low load times (~0.06 seconds) for data fetching and rendering.
 
 Key optimizations include:
