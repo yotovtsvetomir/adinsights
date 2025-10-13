@@ -4,6 +4,9 @@ This project fetches posts data from third-party stores into the database and pr
 
 ---
 
+## Live Demo
+Check out the live website here: [https://teamyotov.com](https://teamyotov.com)
+
 ## Features
 
 - Fetches posts from external API and stores in DB without duplicates
