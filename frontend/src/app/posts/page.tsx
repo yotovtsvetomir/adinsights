@@ -49,10 +49,13 @@ export default function PostsPage() {
   const contextData = usePostsData();
   const [posts, setPosts] = useState<PostBase[]>(contextData.posts.items);
   const [duration, setDuration] = useState<number>(contextData.duration ?? 0);
-  const [filters, setFilters] = useState<{ all_users: number[]; all_flag_reasons: string[] }>({
-    all_users: [],
-    all_flag_reasons: [],
-  });
+  const [filters, setFilters] = useState<{
+    all_users: number[];
+    all_flag_reasons: string[];
+  }>(() => ({
+    all_users: contextData.filters.all_users || [],
+    all_flag_reasons: contextData.filters.all_flag_reasons || [],
+  }));
   const [currentPage, setCurrentPage] = useState<number>(
     contextData.posts.current_page
   );
