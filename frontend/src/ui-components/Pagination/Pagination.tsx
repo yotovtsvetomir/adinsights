@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import styles from './Pagination.module.css';
 
 interface PaginationProps {
@@ -8,7 +9,26 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
+// Hook to detect mobile screen width
+function useIsMobile(breakpoint = 768) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= breakpoint);
+    };
+
+    handleResize(); // initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [breakpoint]);
+
+  return isMobile;
+}
+
 export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+  const isMobile = useIsMobile();
+
   if (totalPages <= 1) return null;
 
   const handlePageClick = (page: number, shouldScroll: boolean = true) => {
@@ -24,6 +44,31 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
 
   const getPageNumbers = () => {
     const pages: (number | 'prev-ellipsis' | 'next-ellipsis')[] = [];
+
+    if (isMobile) {
+      // Mobile logic: < 1 ... currentPage ... totalPages >
+      pages.push(1);
+
+      if (currentPage > 2) {
+        pages.push('prev-ellipsis');
+      }
+
+      if (currentPage !== 1 && currentPage !== totalPages) {
+        pages.push(currentPage);
+      }
+
+      if (currentPage < totalPages - 1) {
+        pages.push('next-ellipsis');
+      }
+
+      if (totalPages !== 1) {
+        pages.push(totalPages);
+      }
+
+      return pages;
+    }
+
+    // Desktop logic
     const totalButtons = 7; // total buttons including ellipsis
 
     if (totalPages <= totalButtons) {
@@ -60,7 +105,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         <button
           key={`prev-ellipsis-${index}`}
           className={styles.pageButton}
-          onClick={() => handlePageClick(Math.max(currentPage - 3, 1), false)} // no scroll on ellipsis
+          onClick={() => handlePageClick(Math.max(currentPage - 3, 1), false)}
         >
           ...
         </button>
@@ -72,7 +117,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         <button
           key={`next-ellipsis-${index}`}
           className={styles.pageButton}
-          onClick={() => handlePageClick(Math.min(currentPage + 3, totalPages), false)} // no scroll on ellipsis
+          onClick={() => handlePageClick(Math.min(currentPage + 3, totalPages), false)}
         >
           ...
         </button>
@@ -83,7 +128,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
       <button
         key={page}
         className={`${styles.pageButton} ${page === currentPage ? styles.active : ''}`}
-        onClick={() => handlePageClick(Number(page))} // scroll by default
+        onClick={() => handlePageClick(Number(page))}
       >
         {page}
       </button>
