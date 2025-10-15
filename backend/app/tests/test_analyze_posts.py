@@ -9,7 +9,6 @@ from app.api.posts import (
 from app.db.models.post import Post
 
 
-# --- Unit tests for core functions ---
 def test_get_words():
     title = "Hello World Again"
     words = get_words(title)
@@ -69,7 +68,6 @@ def test_get_top_users():
 
     top_user_ids, top_three_users = get_top_users(user_unique_words)
 
-    # User 3 has 4 unique words, user 1 has 3, user 2 has 1
     assert top_user_ids[0] == 3
     assert top_three_users == [3, 1, 2]
 

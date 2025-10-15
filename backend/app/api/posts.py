@@ -40,11 +40,9 @@ async def fetch_posts(
 
     raw_posts = response.json()
 
-    # Fetch existing IDs from DB to avoid duplicates
     result = await db.execute(select(Post.id))
     existing_ids = set(result.scalars().all())
 
-    # Filter out already existing posts
     new_posts_data = [
         PostCreate(id=p["id"], user_id=p["userId"], title=p["title"], body=p["body"])
         for p in raw_posts
@@ -77,11 +75,9 @@ def categorize_posts(posts: List[Post]):
         title = post.title
         uid = post.user_id
 
-        # Flag short titles (length < 15)
         if len(title) < 15:
             reasons[post.id] = "Short title"
 
-        # Detect duplicates (if already flagged, this will overwrite short_title)
         if title in user_titles_set[uid]:
             reasons[post.id] = "Duplicate"
         else:
@@ -169,8 +165,6 @@ async def analyze_posts(
     page_size: int = Query(10, ge=1, le=100),
 ):
     start_time = time.perf_counter()
-
-    # Fetch new posts
     await fetch_posts(db)
 
     # Fetch all posts from DB
