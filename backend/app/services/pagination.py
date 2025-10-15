@@ -1,42 +1,66 @@
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text, desc, asc, or_, and_, bindparam
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import BaseModel
 from typing import Type
 
 
-async def paginate(
+async def paginate_composite(
     model,
     db: AsyncSession,
     page: int = 1,
     page_size: int = 10,
-    owner_field: str | None = None,
-    owner_id: int | None = None,
-    anon_field: str | None = None,
-    anon_session_id: str | None = None,
-    options: list = None,
+    search: str | None = None,
+    search_columns: list = None,
+    base_filters: list = None,
+    ordering: str = "id:asc",
     schema: Type[BaseModel] | None = None,
-    extra_filters: list = None,
-    ordering: list = None,
+    options: list = None,
+    trigram_threshold: float = 0.7,
 ):
-    offset = (page - 1) * page_size
-    query = select(model)
+    base_filters = base_filters or []
+    search_columns = search_columns or []
+    filters = list(base_filters)
 
-    # Eager loading
-    if options:
-        for option in options:
-            query = query.options(option)
+    # Set trigram threshold
+    if search and len(search) >= 4:
+        await db.execute(
+            text(f"SET pg_trgm.similarity_threshold = {trigram_threshold}")
+        )
 
-    # Filters
-    filters = []
-    if owner_field and owner_id:
-        filters.append(getattr(model, owner_field) == owner_id)
-    if anon_field and anon_session_id:
-        filters.append(getattr(model, anon_field) == anon_session_id)
-    if extra_filters:
-        filters.extend(extra_filters)
+    # Apply search filter
+    if search and search_columns:
+        words = search.strip().split()
+        search_filters = []
 
-    if filters:
-        query = query.where(*filters)
+        for idx, word in enumerate(words):
+            word_filters = []
+            for col in search_columns:
+                if len(word) < 4:
+                    word_filters.append(col.ilike(f"%{word}%"))
+                else:
+                    # fuzzy search only for longer strings
+                    word_filters.append(
+                        text(f"{col.key} % :word{idx}").bindparams(
+                            bindparam(f"word{idx}", word)
+                        )
+                    )
+                    word_filters.append(col.ilike(f"%{word}%"))
+            search_filters.append(or_(*word_filters))
+
+        filters.append(and_(*search_filters))
+
+    # Parse ordering string
+    try:
+        if ":" in ordering:
+            col_name, direction = ordering.split(":")
+        else:
+            col_name = ordering.lstrip("-")
+            direction = "desc" if ordering.startswith("-") else "asc"
+
+        order_col = getattr(model, col_name)
+        order_clause = desc(order_col) if direction == "desc" else asc(order_col)
+    except AttributeError:
+        raise ValueError(f"Invalid ordering column: {ordering}")
 
     # Count total
     total_query = select(func.count()).select_from(model)
@@ -46,16 +70,21 @@ async def paginate(
     total_result = await db.execute(total_query)
     total_count = total_result.scalar_one()
 
-    # Apply ordering
-    if ordering:
-        query = query.order_by(*ordering)
+    # Build main query
+    offset = (page - 1) * page_size
+    query = select(model)
 
-    # Pagination
-    query = query.offset(offset).limit(page_size)
+    if options:
+        for opt in options:
+            query = query.options(opt)
+
+    if filters:
+        query = query.where(*filters)
+
+    query = query.order_by(order_clause).offset(offset).limit(page_size)
     result = await db.execute(query)
     items = result.scalars().all()
 
-    # Convert to Pydantic if schema is provided
     if schema:
         items = [schema.from_orm(item) for item in items]
 

@@ -7,8 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fuzzywuzzy import fuzz
 
-from app.services.pagination import paginate
-from app.services.search import apply_filters_search_ordering
+from app.services.pagination import paginate_composite
 from app.db.session import get_session
 from app.db.models.post import Post
 from app.schemas.post import (
@@ -201,24 +200,16 @@ async def analyze_posts(
     if user_id:
         filters.append(Post.user_id == user_id)
 
-    # Search and ordering
-    filters, ordering = await apply_filters_search_ordering(
-        model=Post,
-        db=db,
-        search=search,
-        search_columns=[Post.title],
-        filters=filters,
-        ordering=order_by or "id:asc",
-    )
-
     # Paginated result
-    paginated = await paginate(
+    paginated = await paginate_composite(
         model=Post,
         db=db,
         page=page,
         page_size=page_size,
-        extra_filters=filters,
-        ordering=ordering,
+        search=search,
+        search_columns=[Post.title],
+        base_filters=filters,
+        ordering=order_by or "id:asc",
         schema=PostBase,
     )
 
