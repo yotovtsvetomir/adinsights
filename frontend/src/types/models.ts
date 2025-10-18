@@ -47,6 +47,26 @@ export interface PostCreate {
   body: string;
   flag_reason?: string | null;
 }
+export interface PostQueryParams {
+  /**
+   * Filter posts by reason
+   */
+  reason?: string | null;
+  /**
+   * Search posts by title
+   */
+  search?: string | null;
+  /**
+   * Filter posts by user ID
+   */
+  user_id?: number | null;
+  /**
+   * Order by column (e.g., 'title:asc' or 'title:desc')
+   */
+  order_by?: ("title:asc" | "title:desc" | "id:asc" | "id:desc") | null;
+  page?: number;
+  page_size?: number;
+}
 export interface PostResponse {
   id: number;
   user_id: number;

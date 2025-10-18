@@ -1,8 +1,8 @@
 import time
 import httpx
-from typing import List, Optional, Dict
+from typing import List, Dict
 from collections import defaultdict, Counter
-from fastapi import APIRouter, Depends, HTTPException, Query, Path
+from fastapi import APIRouter, Depends, HTTPException, Path
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fuzzywuzzy import fuzz
@@ -16,6 +16,7 @@ from app.schemas.post import (
     AnalyzePostsResponse,
     SummaryPanel,
     FiltersPanel,
+    PostQueryParams,
 )
 
 router = APIRouter()
@@ -155,15 +156,15 @@ async def get_post(
 @router.get("/analyze-posts", response_model=AnalyzePostsResponse)
 async def analyze_posts(
     db: AsyncSession = Depends(get_session),
-    reason: Optional[str] = Query(None, description="Filter posts by reason"),
-    search: Optional[str] = Query(None, description="Search posts by title"),
-    user_id: Optional[int] = Query(None, description="Filter posts by user ID"),
-    order_by: Optional[str] = Query(
-        None, description="Order by column (e.g., 'title:asc' or 'title:desc')"
-    ),
-    page: int = Query(1, ge=1),
-    page_size: int = Query(10, ge=1, le=100),
+    params: PostQueryParams = Depends(),
 ):
+    reason = params.reason
+    search = params.search
+    user_id = params.user_id
+    order_by = params.order_by
+    page = params.page
+    page_size = params.page_size
+
     start_time = time.perf_counter()
     await fetch_posts(db)
 

@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, Field
+from typing import List, Optional, Literal
 
 
 class PostBase(BaseModel):
@@ -51,3 +51,14 @@ class AnalyzePostsResponse(BaseModel):
     summary: SummaryPanel
     filters: FiltersPanel
     duration: Optional[float] = None
+
+
+class PostQueryParams(BaseModel):
+    reason: Optional[str] = Field(None, description="Filter posts by reason")
+    search: Optional[str] = Field(None, description="Search posts by title")
+    user_id: Optional[int] = Field(None, description="Filter posts by user ID")
+    order_by: Optional[Literal["title:asc", "title:desc", "id:asc", "id:desc"]] = Field(
+        None, description="Order by column (e.g., 'title:asc' or 'title:desc')"
+    )
+    page: int = Field(1, ge=1)
+    page_size: int = Field(10, ge=1, le=100)

@@ -12,7 +12,7 @@ import Pagination from '@/ui-components/Pagination/Pagination';
 import dynamic from 'next/dynamic';
 import styles from './Posts.module.css';
 
-import { AnalyzePostsResponse, PostBase } from '@/types/models';
+import { AnalyzePostsResponse, PostBase, PostQueryParams } from '@/types/models';
 import { usePostsData } from '@/context/PostsContext';
 
 const ReactSelect = dynamic(() => import('@/ui-components/Select/ReactSelect'), {
@@ -97,15 +97,22 @@ export default function PostsPage() {
     async function fetchData() {
       setLoading(true);
       try {
-        const params = new URLSearchParams({
-          page: String(currentPage),
-          page_size: String(pageSize),
-        });
+        // Typed request as suggested
+        const paramsObj: PostQueryParams = {
+          page: currentPage,
+          page_size: pageSize,
+          search: debouncedSearchQuery || null,
+          reason: reasonFilter?.value || null,
+          user_id: userFilter ? Number(userFilter.value) : null,
+          order_by: (orderBy?.value as PostQueryParams['order_by']) || null,
+        };
 
-        if (debouncedSearchQuery) params.append('search', debouncedSearchQuery);
-        if (reasonFilter) params.append('reason', reasonFilter.value);
-        if (userFilter) params.append('user_id', userFilter.value);
-        if (orderBy) params.append('order_by', orderBy.value);
+        const params = new URLSearchParams();
+        Object.entries(paramsObj).forEach(([key, value]) => {
+          if (value !== null && value !== undefined && value !== '') {
+            params.append(key, String(value));
+          }
+        });
 
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/posts/analyze-posts?${params.toString()}`
