@@ -24,9 +24,13 @@ These design choices ensure fast, scalable, and user-friendly performance even w
 
 ---
 
-# Running the project
+# Running the project for first time
 ```bash
 docker compose up
+docker exec -it adinsights-db_writer-1 psql -U postgres -d myapp
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+docker exec -it adinsights-backend-1 alembic revision --autogenerate -m "latest migration"
+docker exec -it adinsights-backend-1 alembic upgrade head
 ```
 
 # Prerequisites

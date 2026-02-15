@@ -14,5 +14,7 @@ venv/
 .DS_Store
 
 # Env files
-.env
 EOF
+
+# Alembic versions
+alembic/versions/*
