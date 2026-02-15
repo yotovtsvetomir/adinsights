@@ -156,8 +156,6 @@ export default function PostsPage() {
     <div className="container fullHeight centerWrapper">
       <div className={styles.duration}>
         <h3>The request to the API took {formatDuration(duration)}</h3>
-        <p>The app is deployed on a very small node (1gb ram / 1 shared cpu) and on docker compose</p>
-        <p>It can be a lot faster on proper cloud with kube or larger node running natively</p>
       </div>
 
       <div className={styles.filters}>

@@ -5,13 +5,15 @@ This project fetches posts data from third-party stores into the database and pr
 ---
 
 ## Live Demo
-Check out the live website here: [https://teamyotov.com](https://teamyotov.com)
+Check out the live website here: [https://adinsights.live](https://adinsights.live)
+Backend docs: [https://api.adinsights.live/docs](https://api.adinsights.live/docs)
+Frontend storybook: [https://storybook.adinsights.live](https://storybook.adinsights.live)
 
 ## SSR & Single Request Design
 The frontend leverages Server-Side Rendering (SSR) to deliver initial data quickly and SEO-friendly. To optimize performance and simplify state management, filtering, sorting, searching, and pagination are all handled via a **single API request** that dynamically updates based on user interactions. This design reduces unnecessary calls, ensures consistent data, and keeps the UI highly responsive.
 
 ## Performance & Tech Insights
-This project demonstrates efficient handling of complex filters, sorting, search, and pagination within a single optimized API request. Running on a minimal server setup (1 CPU, 1GB RAM), it achieves impressively low load times (~0.0* seconds) for data fetching and rendering.
+This project demonstrates efficient handling of complex filters, sorting, search, and pagination within a single optimized API request. Running on a server setup (2 CPU, 2GB RAM), it achieves impressively low load times (~0.0* seconds) for data fetching and rendering.
 
 Key optimizations include:
 

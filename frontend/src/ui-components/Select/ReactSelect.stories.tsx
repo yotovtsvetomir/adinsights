@@ -9,9 +9,9 @@ const meta: Meta<typeof ReactSelect> = {
 export default meta
 
 const options: Option[] = [
-  { value: 'small', label: 'Малък' },
-  { value: 'medium', label: 'Среден' },
-  { value: 'large', label: 'Голям' },
+  { value: 'small', label: 'Small' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'large', label: 'Large' },
 ]
 
 export const Default: StoryObj = {
@@ -24,7 +24,7 @@ export const Default: StoryObj = {
           options={options}
           value={value}
           onChange={setValue}
-          placeholder="Изберете размер"
+          placeholder="Select size"
         />
       </div>
     )

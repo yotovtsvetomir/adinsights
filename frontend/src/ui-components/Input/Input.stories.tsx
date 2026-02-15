@@ -18,7 +18,7 @@ export const Default: Story = {
       <Input
         id="email"
         name="email"
-        label="Имейл"
+        label="Email"
         type="email"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -34,9 +34,9 @@ export const WithError: Story = {
       <Input
         id="email-error"
         name="email"
-        label="Имейл"
+        label="Email"
         type="email"
-        error="Невалиден имейл адрес"
+        error="Invalid email address"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
@@ -51,7 +51,7 @@ export const Password: Story = {
       <Input
         id="password"
         name="password"
-        label="Парола"
+        label="Password"
         type="password"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -62,12 +62,12 @@ export const Password: Story = {
 
 export const Text: Story = {
   render: () => {
-    const [value, setValue] = useState('ivan.petrov');
+    const [value, setValue] = useState('john.doe');
     return (
       <Input
         id="email"
         name="email"
-        label="Потребителско име"
+        label="Username"
         type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -78,12 +78,12 @@ export const Text: Story = {
 
 export const Large: Story = {
   render: () => {
-    const [value, setValue] = useState('ivan.petrov');
+    const [value, setValue] = useState('john.doe');
     return (
       <Input
         id="email"
         name="email"
-        label="Потребителско име"
+        label="Username"
         type="text"
         value={value}
         size="large"
@@ -95,12 +95,12 @@ export const Large: Story = {
 
 export const WithIcon: Story = {
   render: () => {
-    const [value, setValue] = useState('Покана за рожден ден');
+    const [value, setValue] = useState('Birthday Invitation');
     return (
       <Input
         id="email-icon"
         name="email"
-        label="Име на събитието"
+        label="Event Name"
         icon="event"
         type="text"
         value={value}
@@ -115,9 +115,9 @@ export const Disabled: Story = {
     <Input
       id="disabled"
       name="disabled"
-      label="Неактивно"
+      label="Disabled"
       type="text"
-      value="Неактивно"
+      value="Disabled"
       onChange={() => {}}
       required
       disabled

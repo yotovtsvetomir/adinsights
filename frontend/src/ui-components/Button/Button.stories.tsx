@@ -13,36 +13,36 @@ export default meta;
 type Story = StoryObj<typeof Button>;
 
 export const Primary: Story = {
-  render: () => <Button>Основен бутон</Button>,
+  render: () => <Button>Primary Button</Button>,
 };
 
 export const Secondary: Story = {
-  render: () => <Button variant="secondary">Вторичен бутон</Button>,
+  render: () => <Button variant="secondary">Secondary Button</Button>,
 };
 
 export const Large: Story = {
-  render: () => <Button size="large" variant="secondary">Голям бутон</Button>
+  render: () => <Button size="large" variant="secondary">Large Button</Button>
 }
 
 export const Danger: Story = {
-  render: () => <Button variant="danger">Опасен бутон</Button>,
+  render: () => <Button variant="danger">Danger Button</Button>,
 };
 
 export const Ghost: Story = {
-  render: () => <Button variant="ghost">Назад</Button>,
+  render: () => <Button variant="ghost">Back</Button>,
 };
 
 export const Disabled: Story = {
-  render: () => <Button disabled>Неактивен бутон</Button>,
+  render: () => <Button disabled>Disabled Button</Button>,
 };
 
 export const Loading: Story = {
-  render: () => <Button loading>Зарежда...</Button>,
+  render: () => <Button loading>Loading...</Button>,
 };
 
 export const WithIconRight: Story = {
   args: {
-    children: 'Преглед',
+    children: 'Preview',
     icon: 'visibility',
     iconPosition: 'right',
     variant: 'secondary',
@@ -51,7 +51,7 @@ export const WithIconRight: Story = {
 
 export const WithIconLeft: Story = {
   args: {
-    children: 'Добави',
+    children: 'Add',
     icon: 'add',
     iconPosition: 'left',
     variant: 'primary',
@@ -72,8 +72,8 @@ export const ClickHandler: Story = {
     const [clicked, setClicked] = useState(false);
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <Button onClick={() => setClicked(true)}>Натисни ме</Button>
-        {clicked && <span>Натиснато!</span>}
+        <Button onClick={() => setClicked(true)}>Click Me</Button>
+        {clicked && <span>Clicked!</span>}
       </div>
     );
   },
@@ -81,6 +81,6 @@ export const ClickHandler: Story = {
 
 export const BoldText: Story = {
   render: () => (
-    <Button bold>Получер текст</Button>
+    <Button bold>Bold Text</Button>
   ),
 };
