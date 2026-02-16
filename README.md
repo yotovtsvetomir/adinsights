@@ -6,7 +6,9 @@ This project fetches posts data from third-party stores into the database and pr
 
 ## Live Demo
 Check out the live website here: [https://adinsights.live](https://adinsights.live)
+
 Backend docs: [https://api.adinsights.live/docs](https://api.adinsights.live/docs)
+
 Frontend storybook: [https://storybook.adinsights.live](https://storybook.adinsights.live)
 
 ## SSR & Single Request Design
